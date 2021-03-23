@@ -1,0 +1,7 @@
+raw_data = read_data()
+preprocessed_data = regressor_preprocess(raw_data)
+
+info = {column: len(set(raw_data[column])) for column in raw_data.columns}
+
+for k, v in info.items():
+    print(k+':' + ' '*(15-len(k))+ str(v))

@@ -1,0 +1,5 @@
+name,architecture,batch_size,epochs,optimizer,learning_rate,momentum,mode,k,n_train,n_test,n_columns,train_mse,valid_mse,test_mse,train_loss,valid_loss,test_loss
+arch0_B8_Osgd_L0.1_M0,arch0,8,10,sgd,0.1,0,kfold,3.0,50,,8,1.6366347829500834,1.633811593055725,,1.7401032288869225,1.7372553626696268,
+arch0_B8_Osgd_L0.1_M0,arch0,8,10,sgd,0.1,0,kfold,3.0,50,,8,1.6391639232635498,1.6442442337671916,,1.7516937136650086,1.7567481517791748,
+arch0_B8_Osgd_L0.1_M0,arch0,8,10,sgd,0.1,0,holdout,,40,10.0,8,,,0.4653602540493011,,,0.3555949330329895
+arch0_B8_Osgd_L0.1_M0,arch0,8,10,sgd,0.1,0,holdout,,40,10.0,8,,,0.27241647243499756,,,0.15997371077537537
