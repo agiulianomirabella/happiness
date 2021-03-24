@@ -1,13 +1,19 @@
 import numpy as np
 import pandas as pd
 
-def best_model(stats_file, mode):
-    stats = pd.read_csv(STATS_PATH + stats_file)
-    stats = stats[stats[mode + '_accuracy'].notna()]
-    accuracy_scores = {np.mean(stats[stats['model_name'] == m][mode+'_accuracy']): m for m in set(stats['model_name'].values)}
-    best_model = accuracy_scores[max(accuracy_scores.keys())]
-    print('The best model is: {}'.format(best_model))
-    return best_model
+def best_model(stats_file):
+    stats = pd.read_csv(stats_file)
+    best_model = stats.iloc[stats['valid_mse'].idxmin()]
+
+    out = {
+        'architecture_name': best_model['architecture'],
+        'batch_size':        best_model['batch_size'],
+        'optimizer':         best_model['optimizer'],
+        'learning_rate':     best_model['learning_rate'],
+        'momentum':          best_model['momentum']
+    }
+
+    return out
 
 def compute_training_scores(histories):
     metrics = list(histories[0].keys())
@@ -27,18 +33,12 @@ def compute_training_scores(histories):
                 mean.append(h[m][epoch])
         mean_per_epoch[m] = np.mean(mean)
 
-        if m=='loss' or m=='val_loss':
-            training_scores[m]              = np.min(mean_per_epoch[m])
-            training_scores[m + '_epoch']    = np.argmin(mean_per_epoch[m])
-        else:
-            training_scores[m]              = np.max(mean_per_epoch[m])
-            training_scores[m + '_epoch']    = np.argmax(mean_per_epoch[m])
+        training_scores[m]               = np.min(np.mean(mean))
+        training_scores[m + '_epoch']    = np.argmin(np.mean(mean))
 
     for m in metrics:
-        if m[:4] == 'val_':
-            out[m.replace('val_', 'valid_').replace('_mean_squared_error', '_mse')] = training_scores[m]
-        else:
-            out['train_' + m.replace('mean_squared_error', 'mse')] = training_scores[m]
+        name = 'train_' + m.replace('mean_squared_error', 'mse').replace('mean_absolute_percentage_error', 'mape')
+        out[name.replace('train_val_', 'valid_')] = training_scores[m]
 
     return out
 

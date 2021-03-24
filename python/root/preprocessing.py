@@ -1,15 +1,18 @@
 from root.parameters import TARGET
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.impute import SimpleImputer
 
 import pandas as pd
+import numpy as np
 
 def one_hot_encoding(df):
     return pd.get_dummies(df, prefix_sep='==', dummy_na=True)
     # return pd.get_dummies(df, prefix_sep='==', columns= enums(df), dummy_na=True)
 
 def numeric_encoding(df):
-    scaled_data = StandardScaler().fit_transform(df.values)
-    return pd.DataFrame(scaled_data, columns = df.columns)
+    df = pd.DataFrame(SimpleImputer(strategy='mean').fit_transform(df), columns=df.columns)
+    df = pd.DataFrame(MinMaxScaler().fit_transform(df), columns=df.columns)
+    return df
 
 def txt2enum(df):
     for column in texts(df):

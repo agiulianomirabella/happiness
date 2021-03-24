@@ -1,4 +1,5 @@
 
+YEARS = [2015, 2016, 2017, 2018, 2019]
 TARGET = 'score'
 
 STATS_COLUMNS = [
@@ -19,6 +20,10 @@ STATS_COLUMNS = [
     'valid_mse',
     'test_mse',
 
+    'train_mape',
+    'valid_mape',
+    'test_mape',
+
     'train_loss',
     'valid_loss',
     'test_loss'
@@ -27,5 +32,5 @@ STATS_COLUMNS = [
 
 ##### DEFAULT HYPERPARAMETERS:
 BATCH_SIZE  = 8
-EPOCHS      = 10
-K           = 3
+EPOCHS      = 100
+K           = 5

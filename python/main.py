@@ -1,22 +1,25 @@
-from root.utils import pretty_dict
+from root.mlp.auto import AutoRegressor
 from root.preprocessing import regressor_preprocess
 from root.read_data import read_data
-from root.mlp.classifier import Regressor
-from sklearn.model_selection import train_test_split
 
 raw_data = read_data()
 
-preprocessed_data = regressor_preprocess(raw_data).iloc[:50]
+preprocessed_data = regressor_preprocess(raw_data)
 
-regressor = Regressor(len(list(preprocessed_data.columns)), 'arch0')
-regressor.plot_model()
+batch_sizes    = [4, 8, 16, 32, 64]
+learning_rates = [0.01, 0.05, 0.1, 0.2]
+momentums      = [0, 0.01, 0.05, 0.1, 0.2]
+optimizers     = ['Adam', 'sgd']
 
-# score = regressor.kfold(preprocessed_data)
+auto = AutoRegressor(
+    preprocessed_data,
+    batch_sizes=    batch_sizes,
+    learning_rates= learning_rates,
+    momentums=      momentums,
+    optimizers=     optimizers
+)
 
+auto.best()
+auto.get_score()
 
-train_df, test_df = train_test_split(preprocessed_data, test_size=0.2)
-score = regressor.holdout(train_df, test_df)
-
-
-pretty_dict(score)
 

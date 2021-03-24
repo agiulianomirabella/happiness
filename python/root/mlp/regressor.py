@@ -23,10 +23,10 @@ class Regressor:
         self.batch_size         = batch_size
         self.optimizer          = optimizer
         self.learning_rate      = learning_rate
-        self.momentum           = momentum
+        self.momentum           = 0 if self.optimizer.lower == 'adam' else momentum
 
-        self.stats_file = stats_file
-        self.model = get_model(input_dim, architecture_name, optimizer)
+        self.scores = path + stats_file
+        self.model = get_model(input_dim, architecture_name, optimizer, learning_rate, momentum)
 
     def plot_model(self):
         tf.keras.utils.plot_model(self.model, self.path + self.name + '_architecture.png', dpi=72, rankdir="LR", show_shapes=True)
@@ -35,8 +35,9 @@ class Regressor:
 
         histories = []
 
-        y = preprocessed_data.copy().pop(TARGET).values
-        X = preprocessed_data.values
+        X = preprocessed_data.copy()
+        y = X.pop(TARGET).values
+        X = X.values
 
         kf = KFold(n_splits=k, shuffle=True)
 
@@ -68,17 +69,20 @@ class Regressor:
             'n_columns': len(preprocessed_data.columns) - 1,
         })
 
-        append_to_stats(stats, self.path, self.stats_file)
+        append_to_stats(stats, self.scores)
 
         return stats
 
     def holdout(self, train_df, test_df, epochs=EPOCHS):
 
-        y_train = train_df.copy().pop(TARGET).values
-        y_test  =  test_df.copy().pop(TARGET).values
+        X_train = train_df.copy()
+        X_test  =  test_df.copy()
 
-        X_train = train_df.values
-        X_test  =  test_df.values
+        y_train = X_train.pop(TARGET).values
+        y_test  =  X_test.pop(TARGET).values
+
+        X_train = X_train.values
+        X_test  =  X_test.values
 
         X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.2)
 
@@ -102,13 +106,12 @@ class Regressor:
             'n_test':      len(test_df.index),
             'n_columns':   len(train_df.columns) - 1,
             'epochs':      epochs,
-            'test_mse':    evaluation[0],
-            'test_loss':   evaluation[1]
+            'test_loss':   evaluation[0],
+            'test_mse':    evaluation[1],
+            'test_mape':   evaluation[2]
         }
         stats.update(self.info)
 
-        append_to_stats(stats, self.path, self.stats_file)
-        print(self.model.metrics_names)
+        append_to_stats(stats, self.scores)
 
         return stats
-
