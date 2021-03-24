@@ -53,7 +53,7 @@ class Regressor:
                 epochs = epochs,
                 callbacks = [
                     tf.keras.callbacks.EarlyStopping(
-                        monitor='val_loss', patience=5, mode='auto', restore_best_weights=True
+                        monitor='val_mean_squared_error', patience=5, mode='auto', restore_best_weights=True
                     )
                 ]
             )

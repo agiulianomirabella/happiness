@@ -1,19 +1,33 @@
 import numpy as np
 import pandas as pd
 
-def best_model(stats_file):
-    stats = pd.read_csv(stats_file)
-    best_model = stats.iloc[stats['valid_mse'].idxmin()]
+def get_model_scores(path, name):
+    test_stats          = pd.read_csv(path + 'test_scores.csv')
+    best_model_test_row = test_stats[test_stats['name'] == name].iloc[0]
 
-    out = {
-        'architecture_name': best_model['architecture'],
-        'batch_size':        best_model['batch_size'],
-        'optimizer':         best_model['optimizer'],
-        'learning_rate':     best_model['learning_rate'],
-        'momentum':          best_model['momentum']
+    scores = {
+        'test_loss':    best_model_test_row['test_loss'],
+        'test_mse':     best_model_test_row['test_mse'],
+        'test_mape':    best_model_test_row['test_mape']
     }
 
-    return out
+    return scores
+
+def best_model(path):
+    train_stats = pd.read_csv(path + 'train_scores.csv')
+
+    best_model_train_row = train_stats.iloc[train_stats['valid_mse'].idxmin()]
+
+    best_model_info = {
+        'name':              best_model_train_row['name'],
+        'architecture_name': best_model_train_row['architecture'],
+        'batch_size':        best_model_train_row['batch_size'],
+        'optimizer':         best_model_train_row['optimizer'],
+        'learning_rate':     best_model_train_row['learning_rate'],
+        'momentum':          best_model_train_row['momentum']
+    }
+
+    return best_model_info
 
 def compute_training_scores(histories):
     metrics = list(histories[0].keys())

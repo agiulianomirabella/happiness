@@ -3,7 +3,7 @@ import pandas as pd
 from root.mlp.regressor import Regressor
 from root.parameters import BATCH_SIZE, EPOCHS, K
 from root.mlp.utils import compute_auto_name
-from root.mlp.scores import best_model
+from root.mlp.scores import best_model, get_model_scores
 
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
@@ -40,14 +40,14 @@ class AutoRegressor:
         self.learning_rates      = learning_rates
         self.momentums           = momentums
 
-        self.train_scores = self.path + 'train_scores.csv'
-        self.test_scores  = self.path + 'test_scores.csv'
-
-
     def get_score(self):
-        best_model_info = best_model(self.train_scores)
+        best_model_info = best_model(self.path)
+        scores = get_model_scores(self.path, best_model_info['name'])
         print('\nTotal number of experiments: {}'.format(len(self.architectures)*len(self.batch_sizes)*len(self.optimizers)*len(self.learning_rates)*len(self.momentums)))
+        print('The best model is:')
         pretty_dict(best_model_info)
+        print('The scores obtained:')
+        pretty_dict(scores)
         return best_model_info
 
     def best(self):
@@ -81,7 +81,7 @@ class AutoRegressor:
                                     path= self.path)
                                 regressor.kfold(train_df, epochs = self.epochs, k = self.k)
         
-        best_model_info = best_model(self.train_scores)
+        best_model_info = best_model(self.path)
         best_regressor = Regressor(
             len(train_df.columns)-1,
             architecture_name = best_model_info['architecture_name'],
