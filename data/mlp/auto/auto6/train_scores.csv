@@ -1,0 +1,2 @@
+year,name,architecture,batch_size,epochs,optimizer,learning_rate,momentum,mode,k,n_train,n_test,n_columns,train_mse,valid_mse,test_mse,train_mape,valid_mape,test_mape,train_loss,valid_loss,test_loss
+,arch1_B16_Osgd_L0.01_M0,arch1,16,100,sgd,0.01,0,kfold,5,625,,9,0.335236300945282,0.3352363109588623,,100.0,100.0,,0.3507555924654007,0.35073843502998353,

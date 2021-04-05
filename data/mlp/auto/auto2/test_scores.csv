@@ -1,0 +1,2 @@
+year,name,architecture,batch_size,epochs,optimizer,learning_rate,momentum,mode,k,n_train,n_test,n_columns,train_mse,valid_mse,test_mse,train_mape,valid_mape,test_mape,train_loss,valid_loss,test_loss
+,arch1_B16_OAdam_L0.01_M0,arch1,16,100,Adam,0.01,0,holdout,,625,157,9,,,0.04912816360592842,,,69.93321228027344,,,0.05365514010190964
