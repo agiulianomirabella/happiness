@@ -1,0 +1,2 @@
+year,name,architecture,batch_size,epochs,optimizer,learning_rate,momentum,mode,k,n_train,n_test,n_columns,train_mse,valid_mse,test_mse,train_mape,valid_mape,test_mape,train_loss,valid_loss,test_loss
+,arch0_B4_OAdam_L0.01_M0,arch0,4,100,Adam,0.01,0,kfold,5,625,,9,33.2904906193912,0.09945158007740974,,691320.1290415726,856277.04907621,,33.31393733610958,0.12281190057098866,

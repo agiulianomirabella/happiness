@@ -1,0 +1,49 @@
+```{r}
+happinessDataset<-read.csv("C:/Users/2ayas/Desktop/DATASET GLOBAL.csv" , head = TRUE, sep=",")
+happinessDataset
+```
+```{r}
+happy.scale <- as.data.frame(scale(happinessDataset[1:6]))
+```
+
+#Creamos los clústers
+
+```{r}
+set.seed(80)
+
+happinessDataset.km <- kmeans(happy.scale, centers = 3)
+names(happinessDataset.km)
+
+happinessDataset.km$cluster
+happinessDataset.km$totss
+happinessDataset.km$betweenss
+happinessDataset.km$withinss
+happinessDataset.km$tot.withinss
+```
+
+#Determinar el número de clústers óptimo
+
+```{r}
+submt <- kmeans(happy.scale, centers = 1)$betweenss
+
+for(i in 2:10) submt[i] <- kmeans(happy.scale, centers = i)$betweenss
+
+plot(1:10, submt, type="b", xlab = "number of clusters", ylab="sum of squares of inter groups")
+```
+#Inspección de los resultados
+
+```{r}
+plot(happinessDataset$GovermentTrust, happinessDataset$Happiness, col=happinessDataset.km$cluster, xlab="Confianza en el gobierno", ylab="Felicidad")
+
+aggregate(happinessDataset, by=list(happinessDataset.km$cluster), mean)
+```
+```{r}
+plot(happinessDataset$Economy, happinessDataset$Happiness, col=happinessDataset.km$cluster, xlab="Economia", ylab="Felicidad")
+
+aggregate(happinessDataset, by=list(happinessDataset.km$cluster), mean)
+```
+```{r}
+plot(happinessDataset$Health, happinessDataset$Happiness, col=happinessDataset.km$cluster, xlab="Salud", ylab="Felicidad")
+
+aggregate(happinessDataset, by=list(happinessDataset.km$cluster), mean)
+```
